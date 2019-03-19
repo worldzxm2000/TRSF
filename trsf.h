@@ -81,7 +81,10 @@ void Transform2Channel(QString data, QJsonObject &json);
 	EXTERN_C TRSF_XJ_EXPORT void SetTime(QString StationID, uint Socket);
 	//显示返回值
 	EXTERN_C TRSF_XJ_EXPORT void  SetValueToControlWidget(QStringList list);
-	//发送命令
+	//获取设备信息
+	EXTERN_C TRSF_XJ_EXPORT void GetFacilityInfo(uint Socket);
+	//关闭窗体
+	EXTERN_C TRSF_XJ_EXPORT void CloseControlWindow();
 	//发送命令
 	EXTERN_C TRSF_XJ_EXPORT void SetCommand(uint Socket, int CommandType, QString Params1, QString Params2, QString StationID);//<>
 	ControlUI *w;//终端窗体

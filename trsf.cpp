@@ -8,7 +8,7 @@
 //获取业务号
 int GetServiceTypeID()
 {
-	return 9;
+	return 4;
 }
 
 //获取业务名称
@@ -28,7 +28,7 @@ QString GetVersionNo()
 //获取端口号
 int GetPort()
 {
-	return 27005;
+	return 23040;
 }
 //解析数据
 LRESULT Char2Json(QString &buff, QJsonObject &json)
@@ -685,4 +685,36 @@ void  GetControlWidget(QString StationID, uint Socket, QWidget* parent)
 	w->Socket = Socket;
 	w->isActive = &isActive;
 	w->show();
+}
+
+//关闭窗体
+void CloseControlWindow()
+{
+	if (w != NULL)
+	{
+		if (isActive)
+			w->close();
+	}
+
+}
+
+//获取设备信息
+void GetFacilityInfo(uint Socket)
+{
+
+	int chk = 0;
+	int SrcAdrr = 0;
+	BYTE bytes[1024] = { 0 };
+	bytes[0] = 0xaa;
+	bytes[1] = 0x03;
+	bytes[2] = 0x82;
+	chk += bytes[2];
+	bytes[3] = SrcAdrr & 0xff;
+	chk += bytes[3];
+	bytes[4] = (SrcAdrr >> 8) & 0xff;
+	chk += bytes[4];
+	bytes[5] = chk & 0xff;
+	bytes[6] = (chk >> 8) & 0xff;
+	bytes[7] = 0xdd;
+	::send(Socket, (char *)bytes, 8, 0);
 }

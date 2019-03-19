@@ -1,4 +1,4 @@
-#include "ControlUI.h"
+ï»¿#include "ControlUI.h"
 
 ControlUI::ControlUI(QWidget *parent)
 	: QWidget(parent)
@@ -6,12 +6,12 @@ ControlUI::ControlUI(QWidget *parent)
 	ui.setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowFlags(Qt::WindowCloseButtonHint | Qt::FramelessWindowHint);
-	ui.TitleLabel_Name->setText(QString::fromLocal8Bit("ÍÁÈÀË®·Ö"));
-	setWindowTitle(QString::fromLocal8Bit("ÍÁÈÀË®·ÖÉè±¸¿ØÖÆ"));
-	ui.CloseBtn->setToolTipName(QString::fromLocal8Bit("¹Ø±Õ"));
-	ui.MinBtn->setToolTipName(QString::fromLocal8Bit("×îĞ¡»¯"));
-	connect(ui.MinBtn, SIGNAL(clicked()), this, SLOT(slot_minWindow()));//×îĞ¡»¯
-	connect(ui.CloseBtn, SIGNAL(clicked()), this, SLOT(close()));//¹Ø±Õ´°Ìå
+	ui.TitleLabel_Name->setText(QString::fromLocal8Bit("åœŸå£¤æ°´åˆ†"));
+	setWindowTitle(QString::fromLocal8Bit("åœŸå£¤æ°´åˆ†è®¾å¤‡æ§åˆ¶"));
+	ui.CloseBtn->setToolTipName(QString::fromLocal8Bit("å…³é—­"));
+	ui.MinBtn->setToolTipName(QString::fromLocal8Bit("æœ€å°åŒ–"));
+	connect(ui.MinBtn, SIGNAL(clicked()), this, SLOT(slot_minWindow()));//æœ€å°åŒ–
+	connect(ui.CloseBtn, SIGNAL(clicked()), this, SLOT(close()));//å…³é—­çª—ä½“
 	ui.ComboBox_channel->addItem("...");
 	ui.ComboBox_channel->addItem("1");
 	ui.ComboBox_channel->addItem("2");
@@ -69,42 +69,42 @@ void ControlUI::mouseReleaseEvent(QMouseEvent *event)
 	m_Drag = false;
 }
 
-//Í¨µÀ×´Ì¬
+//é€šé“çŠ¶æ€
 void ControlUI::OnChannelIndexChanged(int index)
 {
 	if (index == 0)
 		return;
 	cmmIndex = 1004;
-	ui.label_channel_status->setText(QString::fromLocal8Bit("¶ÁÈ¡Êı¾İÖĞ..."));
-	//²é¿´IPÍ¨µÀ
+	ui.label_channel_status->setText(QString::fromLocal8Bit("è¯»å–æ•°æ®ä¸­..."));
+	//æŸ¥çœ‹IPé€šé“
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x04;//?Ö¡³¤¶È
-	bytes[2] = 0x9d;//?Ö¡ÃüÁî
+	bytes[1] = 0x04;//?å¸§é•¿åº¦
+	bytes[2] = 0x9d;//?å¸§å‘½ä»¤
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//Ô´µØÖ·
+	bytes[3] = SrcAdrr & 0xff;//æºåœ°å€
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
 	bytes[5] = index;
 	chk += bytes[5];
-	bytes[6] = chk & 0xff;//Ğ£ÑéºÍ µÍ°ËÎ»
-	bytes[7] = (chk >> 8) & 0xff;//¸ß°ËÎ»
+	bytes[6] = chk & 0xff;//æ ¡éªŒå’Œ ä½å…«ä½
+	bytes[7] = (chk >> 8) & 0xff;//é«˜å…«ä½
 	bytes[8] = 0xdd;
 	::send(Socket, (char *)bytes, 9, 0);
 }
 
-//´ò¿ªÍ¨µÀ
+//æ‰“å¼€é€šé“
 void ControlUI::OnWOpenChannelBtnClick()
 {
 	cmmIndex = 1005;
-	//»ñÈ¡Í¨µÀºÅ
+	//è·å–é€šé“å·
 	int channel = ui.ComboBox_channel->currentIndex();
 	if (channel == 0)
 		return;
-	//´ò¿ªÍ¨µÀ
+	//æ‰“å¼€é€šé“
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
@@ -126,15 +126,15 @@ void ControlUI::OnWOpenChannelBtnClick()
 	::send(Socket, (char *)bytes, 10, 0);
 }
 
-//¹Ø±ÕÍ¨µÀ
+//å…³é—­é€šé“
 void ControlUI::OnWCloseChannelBtnClick()
 {
 	cmmIndex = 1006;
-	//»ñÈ¡Í¨µÀºÅ
+	//è·å–é€šé“å·
 	int channel = ui.ComboBox_channel->currentIndex();
 	if (channel == 0)
 		return;
-	//¹Ø±ÕÍ¨µÀ
+	//å…³é—­é€šé“
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
@@ -156,15 +156,15 @@ void ControlUI::OnWCloseChannelBtnClick()
 	::send(Socket, (char *)bytes, 10, 0);
 }
 
-//Ğ´ÈëIP
+//å†™å…¥IP
 void ControlUI::OnWIPBtnClick()
 {
 	cmmIndex = 1007;
-	//»ñÈ¡Í¨µÀºÅ
+	//è·å–é€šé“å·
 	int channel = ui.ComboBox_channel->currentIndex();
 	if (channel == 0)
 		return;
-	//Ğ´ÈëIP
+	//å†™å…¥IP
 	int ip1 = 0, ip2 = 0, ip3 = 0, ip4 = 0, port = 0;
 	ip1 = ui.DevicelineEdit_IP1->text().toInt();
 	ip2 = ui.DevicelineEdit_IP2->text().toInt();
@@ -175,14 +175,14 @@ void ControlUI::OnWIPBtnClick()
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x10;//Ö¡³¤¶È
-	bytes[2] = 0x8e;//Ö¡ÃüÁî
+	bytes[1] = 0x10;//å¸§é•¿åº¦
+	bytes[2] = 0x8e;//å¸§å‘½ä»¤
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//Ô´µØÖ·
+	bytes[3] = SrcAdrr & 0xff;//æºåœ°å€
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
-	bytes[5] = channel;//Í¨µÀºÅ
+	bytes[5] = channel;//é€šé“å·
 	chk += bytes[5];
 	bytes[6] = ip1;//IP
 	chk += bytes[6];
@@ -196,45 +196,45 @@ void ControlUI::OnWIPBtnClick()
 	chk += bytes[10];
 	bytes[11] = (port >> 8) & 0xff;//port
 	chk += bytes[11];
-	bytes[12] = chk & 0xff;//Ğ£ÑéºÍ µÍ°ËÎ»
-	bytes[13] = (chk >> 8) & 0xff;//¸ß°ËÎ»
+	bytes[12] = chk & 0xff;//æ ¡éªŒå’Œ ä½å…«ä½
+	bytes[13] = (chk >> 8) & 0xff;//é«˜å…«ä½
 	bytes[14] = 0xdd;
 	::send(Socket, (char *)bytes, 15, 0);
 }
 
-//¶ÁÈ¡IP
+//è¯»å–IP
 void ControlUI::OnRIPBtnClick()
 {
 	cmmIndex = 1008;
-	//»ñÈ¡Í¨µÀºÅ
+	//è·å–é€šé“å·
 	int channel = ui.ComboBox_channel->currentIndex();
 	if (channel == 0)
 		return;
-	//¶ÁÈ¡IP
+	//è¯»å–IP
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x04;//?????
-	bytes[2] = 0x8f;//?????
+	bytes[1] = 0x04;
+	bytes[2] = 0x8f;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
-	bytes[5] = channel;//???
+	bytes[5] = channel;
 	chk += bytes[5];
-	bytes[6] = chk & 0xff;//§µ??¦Ë ???¦Ë
-	bytes[7] = (chk >> 8) & 0xff;//???¦Ë
+	bytes[6] = chk & 0xff;
+	bytes[7] = (chk >> 8) & 0xff;
 	bytes[8] = 0xdd;
 	::send(Socket, (char *)bytes, 9, 0);
 }
 
-//²¹³­ÃüÁî
+//è¡¥æŠ„å‘½ä»¤
 void ControlUI::OnDownBtnClick()
 {
 	cmmIndex = 1003;
-	//»ñÈ¡²¹³­ÆğÊ¼Ê±¼ä
+	//è·å–è¡¥æŠ„èµ·å§‹æ—¶é—´
 	QString yearB, monthB, dayB, hourB, minB, yearE, monthE, dayE, hourE, minE;
 	yearB = ui.BdateTimeEdit->sectionText(QDateTimeEdit::YearSection);
 	monthB = ui.BdateTimeEdit->sectionText(QDateTimeEdit::MonthSection);
@@ -251,10 +251,10 @@ void ControlUI::OnDownBtnClick()
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x0d;//?????
-	bytes[2] = 0x94;//?????
+	bytes[1] = 0x0d;
+	bytes[2] = 0x94;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
@@ -278,17 +278,17 @@ void ControlUI::OnDownBtnClick()
 	chk += bytes[13];
 	bytes[14] = minE.toInt();
 	chk += bytes[14];
-	bytes[15] = chk & 0xff;//§µ??¦Ë ???¦Ë
-	bytes[16] = (chk >> 8) & 0xff;//???¦Ë
+	bytes[15] = chk & 0xff;
+	bytes[16] = (chk >> 8) & 0xff;
 	bytes[17] = 0xdd;
 	::send(Socket, (char *)bytes, 18, 0);
 }
 
-//ÉèÖÃÊ±ÖÓ
+//è®¾ç½®æ—¶é’Ÿ
 void ControlUI::OnWTimeBtnClick()
 {
 	cmmIndex = 1001;
-	//»ñÈ¡µ±Ç°Ê±ÖÓ
+	//è·å–å½“å‰æ—¶é’Ÿ
 	QDateTime nowtime = QDateTime::currentDateTime();
 	QString datetime = nowtime.toString("yyyy.MM.dd hh:mm:ss");
 	QString year, month, day, hour, min, sec;
@@ -298,15 +298,15 @@ void ControlUI::OnWTimeBtnClick()
 	hour = nowtime.toString("hh");
 	min = nowtime.toString("mm");
 	sec = nowtime.toString("ss");
-	//???????
+	
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x0a;//?????
-	bytes[2] = 0x81;//?????
+	bytes[1] = 0x0a;
+	bytes[2] = 0x81;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
@@ -324,13 +324,13 @@ void ControlUI::OnWTimeBtnClick()
 	chk += bytes[10];
 	bytes[11] = sec.toInt();
 	chk += bytes[11];
-	bytes[12] = chk & 0xff;//§µ??¦Ë ???¦Ë
-	bytes[13] = (chk >> 8) & 0xff;//???¦Ë
+	bytes[12] = chk & 0xff;
+	bytes[13] = (chk >> 8) & 0xff;
 	bytes[14] = 0xdd;
 	::send(Socket, (char *)bytes, 15, 0);
 }
 
-//¶ÁÈ¡Ê±ÖÓ
+//è¯»å–æ—¶é’Ÿ
 void ControlUI::OnRTimeBtnClick()
 {
 	cmmIndex = 1002;
@@ -338,46 +338,46 @@ void ControlUI::OnRTimeBtnClick()
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x03;//?????
-	bytes[2] = 0x82;//?????
+	bytes[1] = 0x03;
+	bytes[2] = 0x82;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
-	bytes[5] = chk & 0xff;//§µ??¦Ë ???¦Ë
-	bytes[6] = (chk >> 8) & 0xff;//???¦Ë
+	bytes[5] = chk & 0xff;
+	bytes[6] = (chk >> 8) & 0xff;
 	bytes[7] = 0xdd;
 	::send(Socket, (char *)bytes, 8, 0);
 }
 
-//¶ÁÈ¡APN
+//è¯»å–APN
 void ControlUI::OnRAPNBtnClick()
 {
 	cmmIndex = 1009;
-	//¶ÁÈ¡APN
+	//è¯»å–APN
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	BYTE bytes[1024] = { 0 };
 	bytes[0] = 0xaa;
-	bytes[1] = 0x03;//?????
-	bytes[2] = 0x96;//?????
+	bytes[1] = 0x03;
+	bytes[2] = 0x96;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
-	bytes[5] = chk & 0xff;//§µ??¦Ë ???¦Ë
-	bytes[6] = (chk >> 8) & 0xff;//???¦Ë
+	bytes[5] = chk & 0xff;
+	bytes[6] = (chk >> 8) & 0xff;
 	bytes[7] = 0xdd;
 	::send(Socket, (char *)bytes, 8, 0);
 }
 
-//ÉèÖÃAPN
+//è®¾ç½®APN
 void ControlUI::OnWAPNBtnClick()
 {
 	cmmIndex = 1010;
-	//ÉèÖÃAPN
+	//è®¾ç½®APN
 	int chk = 0;
 	int SrcAdrr = StationID.toInt();
 	QString strAPN = ui.lineEdit_APN->text().trimmed();
@@ -388,7 +388,7 @@ void ControlUI::OnWAPNBtnClick()
 	bytes[1] = 3 + nCount;
 	bytes[2] = 0x95;
 	chk += bytes[2];
-	bytes[3] = SrcAdrr & 0xff;//????
+	bytes[3] = SrcAdrr & 0xff;
 	chk += bytes[3];
 	bytes[4] = (SrcAdrr >> 8) & 0xff;
 	chk += bytes[4];
@@ -408,16 +408,16 @@ void ControlUI::setValue(QStringList list)
 {
 	switch (cmmIndex)
 	{
-	case 1004://×´Ì¬
+	case 1004://çŠ¶æ€
 	{
 		if (list.count() < 1)
 			break;
 		QString Status;
-		Status = list.at(1).compare("1") == 0 ? QString::fromLocal8Bit("´ò¿ª") : QString::fromLocal8Bit("¹Ø±Õ");
+		Status = list.at(1).compare("1") == 0 ? QString::fromLocal8Bit("æ‰“å¼€") : QString::fromLocal8Bit("å…³é—­");
 		ui.label_channel_status->setText(Status);
 		break;
 	}
-	case 1008://IP¼Ó¶Ë¿Ú
+	case 1008://IPåŠ ç«¯å£
 	{
 		if (list.count() < 2)
 			break;
@@ -438,7 +438,7 @@ void ControlUI::setValue(QStringList list)
 		ui.lineEdit_APN->setText(list.at(0));
 		break;
 	}
-	case 1002://Éè±¸Ê±¼ä
+	case 1002://è®¾å¤‡æ—¶é—´
 	{
 		if (list.count() < 1)
 			break;
@@ -451,9 +451,9 @@ void ControlUI::setValue(QStringList list)
 		if (list.count() < 1)
 			break;
 		QString r = list.at(0);
-		if (r.compare(QString::fromLocal8Bit("Í¨ĞÅ½áÊø")) == 0)
+		if (r.compare(QString::fromLocal8Bit("é€šä¿¡ç»“æŸ")) == 0)
 		{
-			QMessageBox::about(this, QString::fromLocal8Bit("Éè±¸×´Ì¬"), QString::fromLocal8Bit("²Ù×÷³É¹¦£¡"));
+			QMessageBox::about(this, QString::fromLocal8Bit("è®¾å¤‡çŠ¶æ€"), QString::fromLocal8Bit("æ“ä½œæˆåŠŸï¼"));
 		}
 	}
 	break;
