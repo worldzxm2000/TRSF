@@ -219,8 +219,12 @@ void Transform2APNAddr(QString data, QJsonObject &json)
 //GPRS发送小时平均体积含水量和频率数据
 void Transform2GPRSPerVolume(QString data, QJsonObject &json)
 {
+
 	//获取层数
 	int count = data.count();
+	//判断数据完整性
+	if (((count - 11) % 8) != 0)
+		return;
 	//数据类型 观测数据
 	json.insert("DataType", 1);
 	//bytes转float
@@ -250,13 +254,14 @@ void Transform2GPRSPerVolume(QString data, QJsonObject &json)
 	json.insert("ErrorRate", GPRSBER);
 
 	QString SoilVolume, SoilFrequency;
-	int LayerCount = (count - 11) / 12;
+	
+	int LayerCount = (count - 11) / 8;
 	for (int i = 0; i < LayerCount; i++)
 	{
 		if (i == 0)
 		{
 			//体积含水量
-			f.float_byte.low_byte = data[i * 4 + 5].unicode();
+			f.float_byte.low_byte = data[i * 4 + 5].unicode();//第i层乘以4加上前时间5个偏移量
 			f.float_byte.mlow_byte = data[i * 4 + 1 + 5].unicode();
 			f.float_byte.mhigh_byte = data[i * 4 + 2 + 5].unicode();
 			f.float_byte.high_byte = data[i * 4 + 3 + 5].unicode();
