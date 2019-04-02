@@ -8,7 +8,7 @@
 //获取业务号
 int GetServiceTypeID()
 {
-	return 9;
+	return 4;
 }
 
 //获取业务名称
@@ -250,7 +250,7 @@ void Transform2GPRSPerVolume(QString data, QJsonObject &json)
 	json.insert("ErrorRate", GPRSBER);
 
 	QString SoilVolume, SoilFrequency;
-	int LayerCount = (count - 11) / 12;
+	int LayerCount = (count - 11) / 8;
 	for (int i = 0; i < LayerCount; i++)
 	{
 		if (i == 0)
