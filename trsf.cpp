@@ -28,7 +28,7 @@ QString GetVersionNo()
 //获取端口号
 int GetPort()
 {
-	return 27005;
+	return 1432;
 }
 //解析数据
 LRESULT Char2Json(QString &buff, QJsonObject &json)
@@ -117,7 +117,7 @@ LRESULT Char2Json(QString &buff, QJsonObject &json)
 					QDateTime current_date_time = QDateTime::currentDateTime();
 					QString current_date = current_date_time.toString("yyyy.MM.dd hh:mm:ss");
 					QString current_day = current_date_time.toString("yyyy-MM-dd");
-					QString fileName = QCoreApplication::applicationDirPath() + "\\TRSF\\" + QString::number(frame.SrcAddr) + "\\" + current_day;
+					QString fileName = QCoreApplication::applicationDirPath() + "\\"+ QString::fromLocal8Bit("土壤水分业务") +"\\" + QString::number(frame.SrcAddr) + "\\" + current_day;
 					QDir dir(fileName);
 					if (!dir.exists())
 						dir.mkpath(fileName);//创建多级目录
@@ -219,8 +219,12 @@ void Transform2APNAddr(QString data, QJsonObject &json)
 //GPRS发送小时平均体积含水量和频率数据
 void Transform2GPRSPerVolume(QString data, QJsonObject &json)
 {
+
 	//获取层数
 	int count = data.count();
+	//判断数据完整性
+	if (((count - 11) % 8) != 0)
+		return;
 	//数据类型 观测数据
 	json.insert("DataType", 1);
 	//bytes转float
@@ -250,13 +254,14 @@ void Transform2GPRSPerVolume(QString data, QJsonObject &json)
 	json.insert("ErrorRate", GPRSBER);
 
 	QString SoilVolume, SoilFrequency;
+	
 	int LayerCount = (count - 11) / 8;
 	for (int i = 0; i < LayerCount; i++)
 	{
 		if (i == 0)
 		{
 			//体积含水量
-			f.float_byte.low_byte = data[i * 4 + 5].unicode();
+			f.float_byte.low_byte = data[i * 4 + 5].unicode();//第i层乘以4加上前时间5个偏移量
 			f.float_byte.mlow_byte = data[i * 4 + 1 + 5].unicode();
 			f.float_byte.mhigh_byte = data[i * 4 + 2 + 5].unicode();
 			f.float_byte.high_byte = data[i * 4 + 3 + 5].unicode();
@@ -685,4 +690,36 @@ void  GetControlWidget(QString StationID, uint Socket, QWidget* parent)
 	w->Socket = Socket;
 	w->isActive = &isActive;
 	w->show();
+}
+
+//关闭窗体
+void CloseControlWindow()
+{
+	if (w != NULL)
+	{
+		if (isActive)
+			w->close();
+	}
+
+}
+
+//获取设备信息
+void GetFacilityInfo(uint Socket)
+{
+
+	int chk = 0;
+	int SrcAdrr = 0;
+	BYTE bytes[1024] = { 0 };
+	bytes[0] = 0xaa;
+	bytes[1] = 0x03;
+	bytes[2] = 0x82;
+	chk += bytes[2];
+	bytes[3] = SrcAdrr & 0xff;
+	chk += bytes[3];
+	bytes[4] = (SrcAdrr >> 8) & 0xff;
+	chk += bytes[4];
+	bytes[5] = chk & 0xff;
+	bytes[6] = (chk >> 8) & 0xff;
+	bytes[7] = 0xdd;
+	::send(Socket, (char *)bytes, 8, 0);
 }
