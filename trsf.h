@@ -12,7 +12,7 @@
 #define HEADER 0xAA
 #define TAIL 0xDD
 #define FE 0xFE
-#define TRSF 9
+#define TRSF 4
 typedef struct DataFrame{
     //长度(2字节)
     int len;

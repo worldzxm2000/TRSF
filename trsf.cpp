@@ -28,7 +28,7 @@ QString GetVersionNo()
 //获取端口号
 int GetPort()
 {
-	return 23040;
+	return 1432;
 }
 //解析数据
 LRESULT Char2Json(QString &buff, QJsonObject &json)
@@ -117,7 +117,7 @@ LRESULT Char2Json(QString &buff, QJsonObject &json)
 					QDateTime current_date_time = QDateTime::currentDateTime();
 					QString current_date = current_date_time.toString("yyyy.MM.dd hh:mm:ss");
 					QString current_day = current_date_time.toString("yyyy-MM-dd");
-					QString fileName = QCoreApplication::applicationDirPath() + "\\TRSF\\" + QString::number(frame.SrcAddr) + "\\" + current_day;
+					QString fileName = QCoreApplication::applicationDirPath() + "\\"+ QString::fromLocal8Bit("土壤水分业务") +"\\" + QString::number(frame.SrcAddr) + "\\" + current_day;
 					QDir dir(fileName);
 					if (!dir.exists())
 						dir.mkpath(fileName);//创建多级目录
