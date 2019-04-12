@@ -72,7 +72,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
     <Text Include="版本说明.txt" />
   </ItemGroup>
 </Project>
