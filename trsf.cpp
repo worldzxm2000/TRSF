@@ -28,7 +28,7 @@ QString GetVersionNo()
 //获取端口号
 int GetPort()
 {
-	return 1432;
+	return 27031;
 }
 //解析数据
 LRESULT Char2Json(QString &buff, QJsonObject &json)
